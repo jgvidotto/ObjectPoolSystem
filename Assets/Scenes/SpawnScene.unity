@@ -285,7 +285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 756f4267b4c96cb46a98d26e7d2981d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnArea: {fileID: 1788397093}
 --- !u!4 &605380115
 Transform:
   m_ObjectHideFlags: 0
@@ -1098,6 +1097,7 @@ MonoBehaviour:
   poolList:
   - prefab: {fileID: 2975662901084890700, guid: db33a2ec5f5a0744ab1c402c9a638696, type: 3}
     tag: Cube
+    size: 10
 --- !u!4 &1133000804
 Transform:
   m_ObjectHideFlags: 0

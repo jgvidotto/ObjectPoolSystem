@@ -12,6 +12,7 @@ public class ObjectPool : MonoBehaviour
     {
         public GameObject prefab;
         public string tag;
+        public int size;
     }
 
     [SerializeField]
@@ -25,13 +26,9 @@ public class ObjectPool : MonoBehaviour
         set => amount.text = value;
     }
 
- 
-
     public List<Pool> poolList;
 
     public Dictionary<string, Queue<GameObject>> poolDict;
-
-    public static ObjectPool Instance;
 
     private List<GameObject> prefabs = new List<GameObject>();
 
@@ -44,6 +41,9 @@ public class ObjectPool : MonoBehaviour
         get { return int.Parse(inputField.text); }
     }
 
+    public static ObjectPool Instance;
+
+    public static Action<int> DoneInit;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -55,55 +55,46 @@ public class ObjectPool : MonoBehaviour
             Instance = this;
         }
     }
+
     private void Start()
     {
         poolDict = new Dictionary<string, Queue<GameObject>>();
-
+        InitPool();
     }
 
-    public void AmountToSpawn()
+    public void InitPool()
     {
-        if(InputValue > 0)
+        foreach (Pool p in poolList)
         {
-            foreach (Pool p in poolList)
-            {
-                Queue<GameObject> poolObject = new Queue<GameObject>();
+            Queue<GameObject> poolObject = new Queue<GameObject>();
 
-                for (int i = 0; i < InputValue; i++)
-                {
-                    GameObject ob = Instantiate(p.prefab);
-                    ob.SetActive(false);
-                    poolObject.Enqueue(ob);
-                    if (!prefabs.Contains(ob)) prefabs.Add(ob);
-                }
-                if (!poolDict.ContainsKey(p.tag))
-                {
-                    poolDict.Add(p.tag, poolObject);
-                }
-                else
-                {
-                    poolDict[p.tag] = poolObject;
-                }
+            for (int i = 0; i < p.size; i++)
+            {
+                GameObject ob = Instantiate(p.prefab);
+                ob.SetActive(false);
+                poolObject.Enqueue(ob);
+                if (!prefabs.Contains(ob)) prefabs.Add(ob);
+            }
+            if (!poolDict.ContainsKey(p.tag))
+            {
+                poolDict.Add(p.tag, poolObject);
             }
         }
-        
+        inputField.text = prefabs.Count.ToString();
+        DoneInit?.Invoke(prefabs.Count);
     }
 
     public void Despawn(string tag)
     {
         if (InputValue <= poolDict[tag].Count)
         {
-
-            StopAllCoroutines();
             for (int i = 0; i < InputValue; i++)
             {
                 GameObject obToRemove = poolDict[tag].Dequeue();
                 prefabs.Remove(obToRemove);
                 obToRemove.SetActive(false);
             }
-
             Debug.Log(poolDict[tag].Count);
-
         }
     }
 
@@ -118,6 +109,7 @@ public class ObjectPool : MonoBehaviour
         obToSpawn.SetActive(true);
         obToSpawn.transform.position = position;
         obToSpawn.transform.rotation = rotation;
+        obToSpawn.GetComponent<FindNearestNeighbour>().Init();
 
         poolDict[tag].Enqueue(obToSpawn);
         return obToSpawn;

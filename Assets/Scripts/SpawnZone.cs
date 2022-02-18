@@ -5,6 +5,19 @@ using UnityEngine;
 public class SpawnZone : MonoBehaviour
 {
     public float x,y,z;
+    public static SpawnZone Instance;
+
+    private void Awake()
+    {
+        if(Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +32,7 @@ public class SpawnZone : MonoBehaviour
         p.z = z;
         return transform.TransformPoint(p);
     }
+
     void OnDrawGizmos()
     {
         Vector3 size = new Vector3(x, y, z);
@@ -27,10 +41,8 @@ public class SpawnZone : MonoBehaviour
         Gizmos.DrawWireCube(Vector3.zero, size);
     }
 
-
     public Vector3 RandomPointInBox(Vector3 center, Vector3 size)
     {
-
         return center + new Vector3(
            (Random.value - 0.5f) * size.x,
            (Random.value - 0.5f) * size.y,

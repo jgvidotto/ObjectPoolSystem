@@ -8,22 +8,28 @@ public class Spawner : MonoBehaviour
 {
     ObjectPool objectPool;
     private Vector3 insideVector;
-    [SerializeField]
-    SpawnZone spawnArea;
     private void Start()
     {
         objectPool = ObjectPool.Instance;
-        insideVector = new Vector3(spawnArea.x, spawnArea.y, spawnArea.z);
-       
+        insideVector = new Vector3(SpawnZone.Instance.x, SpawnZone.Instance.y, SpawnZone.Instance.z);
+        ObjectPool.DoneInit += Init;
+    }
+
+    public void Init(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            objectPool.PoolSpawn("Cube", SpawnZone.Instance.RandomPointInBox(SpawnZone.Instance.transform.position, insideVector), Quaternion.identity);
+        }
     }
 
     public void SpawnObject()
     {
-        objectPool.AmountToSpawn();
+        //objectPool.AmountToSpawn();
 
         for (int i = 0; i < objectPool.InputValue; i++)
         {
-            objectPool.PoolSpawn("Cube", spawnArea.RandomPointInBox(spawnArea.transform.position, insideVector), Quaternion.identity);
+            objectPool.PoolSpawn("Cube", SpawnZone.Instance.RandomPointInBox(SpawnZone.Instance.transform.position, insideVector), Quaternion.identity);
         }
     }
 
