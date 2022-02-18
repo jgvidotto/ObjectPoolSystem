@@ -109,7 +109,6 @@ public class ObjectPool : MonoBehaviour
         obToSpawn.SetActive(true);
         obToSpawn.transform.position = position;
         obToSpawn.transform.rotation = rotation;
-        obToSpawn.GetComponent<FindNearestNeighbour>().Init();
 
         poolDict[tag].Enqueue(obToSpawn);
         return obToSpawn;
