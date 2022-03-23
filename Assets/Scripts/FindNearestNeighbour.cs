@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class FindNearestNeighbour : MonoBehaviour
 {
+    [HideInInspector]
+    public int id;
     public static List<FindNearestNeighbour> findNearestNeighbours = new List<FindNearestNeighbour>();
     private KdTree<FindNearestNeighbour> kdTreeFindNearestNeighbours = new KdTree<FindNearestNeighbour>();
     private FindNearestNeighbour kdTreeFindNearestNeighbour;
@@ -34,7 +36,5 @@ public class FindNearestNeighbour : MonoBehaviour
 
             yield return null;
         }
-
     }
-
 }

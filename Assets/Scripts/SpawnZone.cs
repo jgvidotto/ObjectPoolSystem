@@ -24,7 +24,7 @@ public class SpawnZone : MonoBehaviour
         SpawnPoint();
     }
 
-    private Vector3 SpawnPoint()
+    public Vector3 SpawnPoint()
     {
         Vector3 p;
         p.x = x;
